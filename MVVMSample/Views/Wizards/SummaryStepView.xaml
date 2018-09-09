@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="MVVMSample.Views.Wizards.SummaryStepView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             lex:LocalizeDictionary.DesignCulture="en"
+             lex:ResxLocalizationProvider.DefaultAssembly="MVVMSample"
+             lex:ResxLocalizationProvider.DefaultDictionary="Strings"
+             mc:Ignorable="d"
+             xmlns:designTime="clr-namespace:MVVMSample.ViewModels.DesignTime"
+             d:DataContext="{d:DesignInstance Type=designTime:DesignSummaryStepViewModel, IsDesignTimeCreatable=true}">
+    <StackPanel>
+        <!-- LocProxy allows you to bind to an enum property and lookup key -->
+        <lex:LocProxy Source="{Binding Response}" Name="EnumProxy" />
+        
+        <TextBlock Margin="5">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <!-- bind to the LocProxy above to get the translated enum value -->
+                    <Setter Property="Text" Value="{Binding Result, ElementName=EnumProxy}" />
+                    <!-- show success in green -->
+                    <Setter Property="Foreground" Value="Green" />
+                    <Style.Triggers>
+                        <!-- show errors in red -->
+                        <DataTrigger Binding="{Binding Response}" Value="Failure">
+                            <Setter Property="Foreground" Value="Red" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+    </StackPanel>
+</UserControl>

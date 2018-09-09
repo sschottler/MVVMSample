@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="MVVMSample.Views.Wizards.Customer.CreateCustomerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:MVVM="http://www.mercurymarine.com/MVVM"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             lex:LocalizeDictionary.DesignCulture="en"
+             xmlns:vm="clr-namespace:MVVMSample.ViewModels.Wizards"
+             xmlns:v="clr-namespace:MVVMSample.Views.Wizards"
+             xmlns:cvm="clr-namespace:MVVMSample.ViewModels.Wizards.Customer"
+             xmlns:cv="clr-namespace:MVVMSample.Views.Wizards.Customer"
+             xmlns:designTime="clr-namespace:MVVMSample.ViewModels.DesignTime"
+             d:DataContext="{d:DesignInstance Type=designTime:DesignCreateCustomerViewModel, IsDesignTimeCreatable=true}">
+    <UserControl.Resources>
+        <!-- associate Views with step ViewModels that will be rendered in ContentPresenter of WizardView -->
+        
+        <DataTemplate DataType="{x:Type cvm:CustomerRequiredStepViewModel}">
+            <cv:CustomerRequiredView />
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type cvm:CustomerOptionalStepViewModel}">
+            <cv:CustomerOptionalView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:SummaryStepViewModel}">
+            <v:SummaryStepView />
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <!-- reusable wizard control with common navigation -->
+    <MVVM:WizardView DataContext="{Binding CustomerWizardViewModel}" />
+</UserControl>

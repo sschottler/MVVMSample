@@ -1,0 +1,96 @@
+﻿<Window x:Class="MVVMSample.Views.MainWindowView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{lex:Loc WindowTitle}" 
+        Width="800"
+        Height="500"
+        WindowStartupLocation="CenterScreen"
+        xmlns:xtk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:lex="http://wpflocalizeextension.codeplex.com"
+        lex:LocalizeDictionary.DesignCulture="en"
+        lex:ResxLocalizationProvider.DefaultAssembly="MVVMSample"
+        lex:ResxLocalizationProvider.DefaultDictionary="Strings"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        xmlns:designTime="clr-namespace:MVVMSample.ViewModels.DesignTime"
+        d:DataContext="{d:DesignInstance Type=designTime:DesignMainWindowViewModel, IsDesignTimeCreatable=true}">
+    <!-- use the Extended Toolkit's BusyIndicator for showing progress updates. Anything within the BusyIndicator's Content will
+         be overlaid with a slightly transparent border to make it look like the window was disabled and act as if it's modal -->
+    <xtk:BusyIndicator IsBusy="{Binding IsBusy}">
+        <xtk:BusyIndicator.BusyContent>
+            <StackPanel>
+                <!-- LocProxy is necessary for translating enums-->
+                <lex:LocProxy Source="{Binding ProgressMessage}" Name="EnumProxy" />
+                <!-- bind to the LocProxy to get the translated enum value -->
+                <TextBlock Text="{Binding Result, ElementName=EnumProxy}" />
+            </StackPanel>
+        </xtk:BusyIndicator.BusyContent>
+        <xtk:BusyIndicator.ProgressBarStyle>
+            <!-- necessary to show progress instead of animated activity -->
+            <Style TargetType="ProgressBar">
+                <Setter Property="IsIndeterminate" Value="False" />
+                <Setter Property="Height" Value="15" />
+                <Setter Property="Margin" Value="8" />
+                <Setter Property="Value" Value="{Binding ProgressPercentage}" />
+            </Style>
+        </xtk:BusyIndicator.ProgressBarStyle>
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+        
+            <Menu Grid.Row="0">
+                <MenuItem Header="{lex:Loc File}">
+                    <MenuItem Header="{lex:Loc OpenFile}" Command="{Binding OpenFileCommand}" />
+                    <MenuItem Header="{lex:Loc SaveFile}" Command="{Binding SaveFileCommand}" />
+                    <Separator />
+                    <MenuItem Header="{lex:Loc Exit}" Command="{Binding CloseCommand}" />
+                </MenuItem>
+                <MenuItem Header="{lex:Loc Edit}" />
+                <MenuItem Header="{lex:Loc Tools}">
+                    <MenuItem Header="{lex:Loc ChangeLanguage}" Command="{Binding OpenLanguageOptionsCommand}" />
+                    <MenuItem Header="{lex:Loc Update}" Command="{Binding UpdateCommand}" />
+                </MenuItem>
+                <MenuItem Header="{lex:Loc Help}">
+                    <MenuItem Header="{lex:Loc About}" Command="{Binding OpenAboutCommand}" />
+                </MenuItem>
+            </Menu>
+        
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <HeaderedContentControl Header="{lex:Loc Menu}" Grid.Column="0" Margin="4 2 4 4">
+                    <HeaderedContentControl.Content>
+                        <ItemsControl IsTabStop="False" ItemsSource="{Binding Commands}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock>
+                                    <Hyperlink Command="{Binding Command}" FontSize="14" TextDecorations="{x:Null}">
+                                        <TextBlock Text="{Binding Title}" Margin="8 5" />
+                                    </Hyperlink>
+                                </TextBlock>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </HeaderedContentControl.Content>
+                </HeaderedContentControl>
+ 
+                <HeaderedContentControl Header="{lex:Loc Workspaces}" Grid.Column="1" Margin="0 2 4 4">
+                    <HeaderedContentControl.Content>
+                        <!-- render workspace viewmodels as tabs in a tab control. The DataTemplates used to associate views to 
+                             each workspace ViewModel are in the app.xaml resources -->
+                        <TabControl ItemsSource="{Binding Workspaces}" 
+                                    ItemTemplate="{StaticResource ClosableTabItemTemplate}"
+                                    SelectedItem="{Binding SelectedWorkspace, Mode=TwoWay}" />
+                    </HeaderedContentControl.Content>
+                </HeaderedContentControl>
+            </Grid>
+        </Grid>
+    </xtk:BusyIndicator>
+</Window>
